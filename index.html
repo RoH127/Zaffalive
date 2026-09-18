@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة شحن عملات Zaffalive المتقدمة</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+        }
+
+        .app-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ec4899;
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #f1f5f9;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-main:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* كارت الرصيد وشريط التقدم */
+        .balance-card {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
+        }
+
+        .balance-card span {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .balance-card strong {
+            display: block;
+            font-size: 26px;
+            color: #38bdf8;
+            margin: 5px 0;
+        }
+
+        .progress-bar-bg {
+            background: #334155;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar-fill {
+            background: #38bdf8;
+            height: 100%;
+            width: 100%;
+            transition: width 0.4s ease;
+        }
+
+        /* باقات الشحن السريع */
+        .quick-packs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pack-btn {
+            background: #334155;
+            border: none;
+            color: #f8fafc;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pack-btn:hover {
+            background: #ec4899;
+        }
+
+        /* سجل العمليات */
+        .history-box {
+            margin-top: 20px;
+            text-align: right;
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .history-box h4 {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 4px;
+        }
+
+        .history-item {
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed #1e293b;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* التحكم العلوي */
+        .top-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .small-btn {
+            background: transparent;
+            border: 1px solid #475569;
+            color: #94a3b8;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .small-btn:hover {
+            color: #fff;
+            border-color: #f43f5e;
+        }
+
+        .hidden { display: none !important; }
+        .msg-error { color: #f43f5e; font-size: 13px; margin-top: 10px; }
+        .msg-success { color: #4ade80; font-size: 13px; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- الصفحة الأولى: تسجيل الدخول -->
+    <div id="loginPage" class="container">
+        <img src="https://www.image2url.com/r2/default/images/1789726238840-e57f258c-c3de-4915-9fc4-da13a049d5ec.jpg" alt="Zaffalive Logo" class="app-logo">
+        <h2>تسجيل الدخول - Zaffalive</h2>
+
+        <div class="input-group">
+            <label>اسم المستخدم:</label>
+            <input type="text" id="username" placeholder="ادخل اسم المستخدم">
+        </div>
+
+        <div class="input-group">
+            <label>كلمة المرور:</label>
+            <input type="password" id="password" placeholder="ادخل الباسورد">
+        </div>
+
+        <button class="btn-main" onclick="handleLogin()">دخول للوحة</button>
+        <div id="loginAlert" class="msg-error"></div>
+    </div>
+
+    <!-- الصفحة الثانية: لوحة التحكم المتقدمة -->
+    <div id="dashboardPage" class="container hidden">
+        <div class="top-controls">
+            <button class="small-btn" onclick="logout()">خروج ✕</button>
+        </div>
+
+        <img src="https://www.image2url.com/r2/default/images/1789726238840-e57f258c-c3de-4915-9fc4-da13a049d5ec.jpg" alt="Zaffalive Logo" class="app-logo">
+        <h2>لوحة شحن العملات</h2>
+
+        <!-- كارت الرصيد -->
+        <div class="balance-card">
+            <span>رصيد العملات المتاح:</span>
+            <strong id="balanceDisplay">2,123,000</strong>
+            <div class="progress-bar-bg">
+                <div id="progressBar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <!-- خانة ID المستلم -->
+        <div class="input-group">
+            <label>ID المستخدم في تطبيق Zaffalive:</label>
+            <input type="text" id="targetId" placeholder="987654">
+        </div>
+
+        <!-- اختيار سريع للكميات -->
+        <label style="text-align: right;">اختر كمية سريعة:</label>
+        <div class="quick-packs">
+            <button class="pack-btn" onclick="selectPack(5400)">5,400</button>
+            <button class="pack-btn" onclick="selectPack(10000)">10,000</button>
+            <button class="pack-btn" onclick="selectPack(25000)">25,000</button>
+            <button class="pack-btn" onclick="selectPack(50000)">50,000</button>
+            <button class="pack-btn" onclick="selectPack(100000)">100,000</button>
+        </div>
+
+        <!-- إدخال الكمية يدوياً -->
+        <div class="input-group">
+            <label>أو اكتب عدد العملات يدوياً:</label>
+            <input type="number" id="coinAmount" placeholder="10000">
+        </div>
+
+        <button class="btn-main" onclick="handleRecharge()">تم الشحن</button>
+        <div id="statusAlert"></div>
+
+        <!-- سجل العمليات السابقة -->
+        <div class="history-box">
+            <h4>سجل العمليات الأخيرة:</h4>
+            <div id="historyList">
+                <span style="color: #64748b; font-size: 11px;">لا توجد عمليات شحن سابقة.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const INITIAL_BALANCE = 2123000;
+        
+        // استعادة الرصيد المحفوظ أو استخدام الرصيد الأولي
+        let totalCoins = localStorage.getItem('zaffa_coins') !== null 
+            ? parseInt(localStorage.getItem('zaffa_coins')) 
+            : INITIAL_BALANCE;
+
+        // تحميل السجل ورصيد العملات عند فتح الصفحة
+        window.onload = function() {
+            updateDisplay();
+            loadHistory();
+        };
+
+        function handleLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            const alertBox = document.getElementById('loginAlert');
+
+            if (user === "10010" && pass === "12345R") {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                alertBox.innerText = "";
+            } else {
+                alertBox.innerText = "اسم المستخدم أو كلمة المرور غير صحيحة!";
+            }
+        }
+
+        function logout() {
+            document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+        }
+
+        function selectPack(amount) {
+            document.getElementById('coinAmount').value = amount;
+        }
+
+        function handleRecharge() {
+            const userId = document.getElementById('targetId').value.trim();
+            const coinsInput = document.getElementById('coinAmount').value;
+            const coinsToDeduct = parseInt(coinsInput);
+            const statusBox = document.getElementById('statusAlert');
+
+            if (!userId) {
+                statusBox.className = "msg-error";
+                statusBox.innerText = "يرجى كتابة ID المستخدم الخاص بالتطبيق أولاً!";
+                return;
+            }
+
+            if (isNaN(coinsToDeduct) || coinsToDeduct <= 0) {
+                statusBox.className = "msg-error";
+                statusBox.innerText = "يرجى اختيار أو كتابة كمية كوينز صالحة!";
+                return;
+            }
+
+            if (coinsToDeduct > totalCoins) {
+                statusBox.className = "msg-error";
+                statusBox.innerText = "عذراً، الرصيد المتاح غير كافي لهذه العملية!";
+                return;
+            }
+
+            // الخصم وتحديث الرصيد وحفظه
+            totalCoins -= coinsToDeduct;
+            localStorage.setItem('zaffa_coins', totalCoins);
+            updateDisplay();
+
+            // إضافة العملية إلى السجل وحفظه
+            addHistoryRecord(userId, coinsToDeduct);
+
+            // إظهار رسالة النجاح
+            statusBox.className = "msg-success";
+            statusBox.innerText = `تم شحن ${coinsToDeduct.toLocaleString()} كوينز بنجاح لـ ID: (${userId})`;
+
+            // تفريغ الحقول
+            document.getElementById('targetId').value = "";
+            document.getElementById('coinAmount').value = "";
+        }
+
+        function updateDisplay() {
+            document.getElementById('balanceDisplay').innerText = totalCoins.toLocaleString();
+            
+            const percentage = (totalCoins / INITIAL_BALANCE) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = Math.max(0, percentage) + "%";
+            
+            if (percentage < 20) {
+                progressBar.style.background = "#f43f5e";
+            } else {
+                progressBar.style.background = "#38bdf8";
+            }
+        }
+
+        function addHistoryRecord(id, coins) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+            const historyItem = { id, coins, timeStr };
+            let historyData = JSON.parse(localStorage.getItem('zaffa_history')) || [];
+            historyData.unshift(historyItem);
+            
+            // حفظ أعلى 15 عملية فقط
+            if(historyData.length > 15) historyData.pop();
+            localStorage.setItem('zaffa_history', JSON.stringify(historyData));
+
+            renderHistory(historyData);
+        }
+
+        function loadHistory() {
+            let historyData = JSON.parse(localStorage.getItem('zaffa_history')) || [];
+            if (historyData.length > 0) {
+                renderHistory(historyData);
+            }
+        }
+
+        function renderHistory(historyData) {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = "";
+
+            historyData.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'history-item';
+                el.innerHTML = `
+                    <span>ID: <strong>${item.id}</strong></span>
+                    <span style="color: #4ade80;">-${item.coins.toLocaleString()}</span>
+                    <span style="color: #64748b;">${item.timeStr}</span>
+                `;
+                historyList.appendChild(el);
+            });
+        }
+    </script>
+</body>
+</html>
